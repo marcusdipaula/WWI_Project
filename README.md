@@ -33,6 +33,9 @@ The strategic objectives stablished for this Project are:
 2. Improve sales efficiency
 3. Optimize inventory management
 
+<details>
+<summary> Diagrams (click to expand) </summary>
+
 #### GIDAR Canvas
 <img src= "Modulo A\GIDAR canvas.png"/>
 
@@ -48,6 +51,7 @@ The strategic objectives stablished for this Project are:
 #### ER Diagram - OLAP
 <img src= "Modulo A\ER_diagram_-_OLAP.png"/>
 
+</details>
 
 ---
 
@@ -55,8 +59,13 @@ The strategic objectives stablished for this Project are:
 
 [Click to access the interactive Dashboard](https://app.powerbi.com/view?r=eyJrIjoiNmExYWU4YWUtOGI2OC00OWViLWEwYzYtYjU3ZThhZjQyZTJlIiwidCI6IjE0Y2JkNWE3LWVjOTQtNDZiYS1iMzE0LWNjMGZjOTcyYTE2MSIsImMiOjh9)
 
+#### Strategic dashboard
 <img src= "Modulo B\Dashboard.png"/>
+
+#### Tactic
 <img src= "Modulo B\Tactic.png"/>
+
+#### Operational
 <img src= "Modulo B\Operational.png"/>
 
 ---
@@ -83,4 +92,5 @@ The Cross-Validation metrics summary:
 
 The Variable importance:
 <img src= "Modulo C\Variable_Importance_List.png"/>
+
 <img src= "Modulo C\Variable_Importance.png"/>
