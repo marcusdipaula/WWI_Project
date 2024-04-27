@@ -33,8 +33,6 @@ The strategic objectives stablished for this Project are:
 2. Improve sales efficiency
 3. Optimize inventory management
 
-<details>
-<summary> Diagrams (click to expand) </summary>
 
 #### GIDAR Canvas
 <img src= "Modulo A\GIDAR canvas.png"/>
@@ -50,8 +48,6 @@ The strategic objectives stablished for this Project are:
 
 #### ER Diagram - OLAP
 <img src= "Modulo A\ER_diagram_-_OLAP.png"/>
-
-</details>
 
 ---
 
