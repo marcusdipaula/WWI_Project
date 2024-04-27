@@ -1,0 +1,28 @@
+table 'Pareto Threshold'
+	lineageTag: 9abe7b76-fb4f-4194-87c6-b2400e95d6a1
+
+	measure 'Pareto Threshold Value' = SELECTEDVALUE('Pareto Threshold'[Pareto Threshold], 0.8)
+		formatString: 0
+		lineageTag: 4e452345-7338-425f-9086-68c5b008beb0
+
+	column 'Pareto Threshold'
+		dataType: double
+		formatString: 0%;-0%;0%
+		lineageTag: 4fea6890-8f8c-4db6-88c8-b06e6917eeb6
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Pareto Threshold' = calculated
+		mode: import
+		source = GENERATESERIES(0.01, 1.01, 0.01)
+
+	annotation PBI_Id = 8c965b552b474b088abb9f04f51a862d
+

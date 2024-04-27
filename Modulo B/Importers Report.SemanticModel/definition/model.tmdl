@@ -1,0 +1,32 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBIDesktopVersion = 2.128.952.0 (24.04)
+
+annotation PBI_QueryOrder = ["Fact Sale","Fact Purchase","Fact Warehouse","Dimension City","Dimension Customer","Dimension Date","Dimension Employee","Dimension Stock Item","Dimension Supplier","_Measures","RangeStart","RangeEnd","Top Bottom selector"]
+
+annotation PBI_ProTooling = ["CalcGroup","DaxQueryView_Desktop","DevMode"]
+
+ref table 'Fact Sale'
+ref table 'Dimension City'
+ref table 'Dimension Customer'
+ref table 'Dimension Date'
+ref table 'Dimension Employee'
+ref table 'Dimension Stock Item'
+ref table _Measures
+ref table 'Fact Purchase'
+ref table 'Fact Warehouse'
+ref table 'Dimension Supplier'
+ref table 'Calculation group'
+ref table 'Pareto Threshold'
+ref table 'Field Parameter'
+ref table 'Top Bottom selector'
+

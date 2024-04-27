@@ -1,0 +1,91 @@
+table 'Dimension Employee'
+	lineageTag: b5af877d-87f4-434f-8df1-6b5b73793aac
+
+	column 'Employee Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: b82ab3ba-fc80-424f-adb1-a8543e35ad2b
+		summarizeBy: none
+		sourceColumn: Employee Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'WWI Employee ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3919ea22-da11-47f0-90a4-57d44ecc813e
+		summarizeBy: none
+		sourceColumn: WWI Employee ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Employee
+		dataType: string
+		lineageTag: 306ad48a-ffdd-4220-abc2-0e4cb8f638c9
+		summarizeBy: none
+		sourceColumn: Employee
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Preferred Name'
+		dataType: string
+		lineageTag: 00e91c1f-88f3-44ed-a615-a3636de19f31
+		summarizeBy: none
+		sourceColumn: Preferred Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Salesperson'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 0f38a5f2-9ab1-42b8-bd10-ec7795c0a4d9
+		summarizeBy: none
+		sourceColumn: Is Salesperson
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valid From'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2ad60d0e-6544-492c-a99f-62bece94f35d
+		summarizeBy: none
+		sourceColumn: Valid From
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Valid To'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 549445ae-d4fd-468e-8e01-bd056b9c008e
+		summarizeBy: none
+		sourceColumn: Valid To
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Lineage Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: e2e88dbe-5027-42b1-a6b3-3912384ecdc3
+		summarizeBy: none
+		sourceColumn: Lineage Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Dimension Employee' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("."),
+				    WideWorldImportersDW = Source{[Name="WideWorldImportersDW"]}[Data],
+				    Dimension_Employee = WideWorldImportersDW{[Schema="Dimension",Item="Employee"]}[Data],
+				    #"Removed Columns" = Table.RemoveColumns(Dimension_Employee,{"Fact.Order(Employee Key)", "Fact.Order(Employee Key) 2", "Fact.Sale"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Valid To", type date}, {"Valid From", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

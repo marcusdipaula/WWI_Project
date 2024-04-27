@@ -1,0 +1,66 @@
+table 'Calculation group'
+	lineageTag: a663e6df-dc09-4c43-89c7-76da4d74a009
+
+	calculationGroup
+
+		calculationItem 'Top or Bottom' =
+				
+				VAR __IsTop = SELECTEDVALUE( 'Top Bottom selector'[Selector] ) = "Top"
+				RETURN
+				IF(
+				    __IsTop
+				    ,CALCULATE(
+				        SELECTEDMEASURE()
+				        ,KEEPFILTERS(
+				            TOPN(
+				                3
+				                ,ADDCOLUMNS(
+				                    ALL('Dimension City'[City])
+				                    ,"@PCW", [Profit CW]
+				                )
+				                ,[@PCW]
+				                ,DESC
+				            )
+				        )
+				    )
+				    ,CALCULATE(
+				        SELECTEDMEASURE()
+				        ,KEEPFILTERS(
+				            TOPN(
+				                3
+				                ,FILTER(
+				                    ADDCOLUMNS(
+				                        ALL('Dimension City'[City])
+				                        ,"@PCW", [Profit CW]
+				                    )
+				                    ,NOT ISBLANK([@PCW])
+				                )
+				                ,[@PCW]
+				                ,ASC
+				            )
+				        )
+				    )
+				)
+
+		calculationItem 'No changes' =
+				
+				SELECTEDMEASURE()
+
+	column 'Selection Column'
+		dataType: string
+		lineageTag: 9249772c-c364-41e6-81cc-77b9daaba3e6
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordinal
+		dataType: int64
+		formatString: 0
+		lineageTag: 0eb0a1ad-9e77-41ee-9f29-6767e97c6729
+		summarizeBy: sum
+		sourceColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+

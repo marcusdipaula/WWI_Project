@@ -1,0 +1,61 @@
+relationship 541c71e4-cd50-4dd5-a083-921c3a0fcafa
+	fromColumn: 'Fact Sale'.'City Key'
+	toColumn: 'Dimension City'.'City Key'
+
+	annotation PBI_IsFromSource = FS
+
+relationship fae71499-48d4-4aeb-ab11-fa701a2ec0e1
+	fromColumn: 'Fact Sale'.'Customer Key'
+	toColumn: 'Dimension Customer'.'Customer Key'
+
+	annotation PBI_IsFromSource = FS
+
+relationship cff1e068-fda6-4e99-9ab7-2645426c340f
+	isActive: false
+	fromColumn: 'Fact Sale'.'Delivery Date Key'
+	toColumn: 'Dimension Date'.Date
+
+	annotation PBI_IsFromSource = FS
+
+relationship 33c68998-6cd3-4a07-9ab3-b4c280c2d3cf
+	fromColumn: 'Fact Sale'.'Invoice Date Key'
+	toColumn: 'Dimension Date'.Date
+
+	annotation PBI_IsFromSource = FS
+
+relationship fb4ac3f4-d8a8-4494-b891-3726590ee0b7
+	fromColumn: 'Fact Sale'.'Salesperson Key'
+	toColumn: 'Dimension Employee'.'Employee Key'
+
+	annotation PBI_IsFromSource = FS
+
+relationship 3347391e-1eb8-40d9-9f48-0da2af501e03
+	fromColumn: 'Fact Sale'.'Stock Item Key'
+	toColumn: 'Dimension Stock Item'.'Stock Item Key'
+
+	annotation PBI_IsFromSource = FS
+
+relationship cc1e1129-b8e0-4fec-8b79-e0be1a3cf26c
+	fromColumn: 'Fact Purchase'.'Date Key'
+	toColumn: 'Dimension Date'.Date
+
+	annotation PBI_IsFromSource = FS
+
+relationship 985d5ddc-d02d-4e9c-8465-e6632d0233d7
+	fromColumn: 'Fact Purchase'.'Stock Item Key'
+	toColumn: 'Dimension Stock Item'.'Stock Item Key'
+
+	annotation PBI_IsFromSource = FS
+
+relationship 0bc893a8-3f50-486f-a13b-90b592ff4278
+	fromColumn: 'Fact Purchase'.'Supplier Key'
+	toColumn: 'Dimension Supplier'.'Supplier Key'
+
+	annotation PBI_IsFromSource = FS
+
+relationship 8fdb5b0f-79c8-408b-afe7-64a3111669d1
+	fromColumn: 'Fact Warehouse'.'Stock Item Key'
+	toColumn: 'Dimension Stock Item'.'Stock Item Key'
+
+	annotation PBI_IsFromSource = FS
+

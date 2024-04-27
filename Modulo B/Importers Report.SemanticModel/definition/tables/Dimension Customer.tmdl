@@ -1,0 +1,114 @@
+table 'Dimension Customer'
+	lineageTag: 02ede097-1b56-4e58-9ac3-452f44217abf
+
+	column 'Customer Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: a02f606d-503f-404b-90de-e864609e0679
+		summarizeBy: none
+		sourceColumn: Customer Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'WWI Customer ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: a564b6bf-1413-44d1-936c-cef8fd4f0851
+		summarizeBy: none
+		sourceColumn: WWI Customer ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer
+		dataType: string
+		lineageTag: 4bd519ab-1456-4de5-b698-2a4abca158b9
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Bill To Customer'
+		dataType: string
+		lineageTag: bce070b4-ed21-4852-a7a3-86fed4d4dc95
+		summarizeBy: none
+		sourceColumn: Bill To Customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: e22f8668-5384-4a70-a99b-ad07417c418f
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Buying Group'
+		dataType: string
+		lineageTag: 68319854-fff4-4840-a7a9-12e0e801a6c1
+		summarizeBy: none
+		sourceColumn: Buying Group
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Primary Contact'
+		dataType: string
+		lineageTag: c3331cc7-ec8a-4a00-870b-e819bf71703a
+		summarizeBy: none
+		sourceColumn: Primary Contact
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Postal Code'
+		dataType: string
+		lineageTag: 7223605f-a80f-493b-8d8a-0a49f30f15d3
+		summarizeBy: none
+		sourceColumn: Postal Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valid From'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ea9eee28-7627-43bc-a342-1e6971648423
+		summarizeBy: none
+		sourceColumn: Valid From
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Valid To'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 88ebca41-62e2-46b5-a3d1-9a7b3117b19e
+		summarizeBy: none
+		sourceColumn: Valid To
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Lineage Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: bfbd8771-a89a-4681-9eb5-15384fcbf753
+		summarizeBy: none
+		sourceColumn: Lineage Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Dimension Customer' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("."),
+				    WideWorldImportersDW = Source{[Name="WideWorldImportersDW"]}[Data],
+				    Dimension_Customer = WideWorldImportersDW{[Schema="Dimension",Item="Customer"]}[Data],
+				    #"Removed Columns" = Table.RemoveColumns(Dimension_Customer,{"Fact.Movement", "Fact.Order", "Fact.Sale(Customer Key)", "Fact.Sale(Customer Key) 2", "Fact.Transaction(Customer Key)", "Fact.Transaction(Customer Key) 2"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Valid From", type date}, {"Valid To", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

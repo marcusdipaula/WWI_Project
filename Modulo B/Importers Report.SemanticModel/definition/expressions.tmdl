@@ -1,0 +1,12 @@
+/// Represents the oldest, or earliest date/time
+expression RangeStart = #datetime(2000, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 4f563ea5-4218-476c-aa2b-a9d0241dabf4
+
+	annotation PBI_ResultType = DateTime
+
+/// Represents the newest, or latest date/time
+expression RangeEnd = #datetime(2025, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: db066821-ad1d-4ffb-857f-83f25efe7a49
+
+	annotation PBI_ResultType = DateTime
+
