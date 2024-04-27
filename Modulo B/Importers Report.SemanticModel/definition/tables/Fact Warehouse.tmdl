@@ -1,0 +1,97 @@
+table 'Fact Warehouse'
+	lineageTag: 2d297a00-b36b-4666-9a3f-38c98430e32a
+
+	column 'Stock Holding Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: e5544085-adf9-4393-b82f-991eaba8cec4
+		summarizeBy: count
+		sourceColumn: Stock Holding Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Stock Item Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 283d038b-dc2f-4b8e-a440-1b7042091b21
+		summarizeBy: none
+		sourceColumn: Stock Item Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quantity On Hand'
+		dataType: int64
+		formatString: #,0
+		lineageTag: b08074d6-5bc3-4b4d-a05d-edafffe7cfa7
+		summarizeBy: sum
+		sourceColumn: Quantity On Hand
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Bin Location'
+		dataType: string
+		lineageTag: 5954589f-0dd8-4313-95ed-ebd3d5a61df7
+		summarizeBy: none
+		sourceColumn: Bin Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Last Stocktake Quantity'
+		dataType: int64
+		formatString: #,0
+		lineageTag: a86058bb-e2b1-4447-8037-53710165321b
+		summarizeBy: sum
+		sourceColumn: Last Stocktake Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Last Cost Price'
+		dataType: double
+		lineageTag: c45760f1-ff11-4f34-8cf7-9abb5dc47faf
+		summarizeBy: sum
+		sourceColumn: Last Cost Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Reorder Level'
+		dataType: int64
+		formatString: 0
+		lineageTag: efd52058-09d8-4297-88c0-5e94e23c86f3
+		summarizeBy: sum
+		sourceColumn: Reorder Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Target Stock Level'
+		dataType: int64
+		formatString: 0
+		lineageTag: 565b5213-5e76-483d-bb51-b4271a5c15de
+		summarizeBy: sum
+		sourceColumn: Target Stock Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Lineage Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d2eb9e4-053d-45df-ae6d-02d0a612312b
+		summarizeBy: count
+		sourceColumn: Lineage Key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Fact Warehouse' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("."),
+				    WideWorldImportersDW = Source{[Name="WideWorldImportersDW"]}[Data],
+				    #"Fact_Stock Holding" = WideWorldImportersDW{[Schema="Fact",Item="Stock Holding"]}[Data],
+				    #"Removed Columns" = Table.RemoveColumns(#"Fact_Stock Holding",{"Dimension.Stock Item"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+

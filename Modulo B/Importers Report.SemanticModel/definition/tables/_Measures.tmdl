@@ -1,0 +1,688 @@
+table _Measures
+	lineageTag: fc75bbd1-2a1e-4a7f-b142-75e1e3f9da71
+
+	measure Quantity = SUM( 'Fact Sale'[Quantity] )
+		formatString: #,0
+		lineageTag: 55e15e96-a2d1-4df8-a466-c934e4c45fdd
+
+	measure 'Count Sales' =
+			
+			DISTINCTCOUNT('Fact Sale'[Sale Key])
+		formatString: #,0
+		lineageTag: f88ad92d-fc7c-4cbc-97e3-fe4a6b7ee8f1
+
+	measure 'MAX Year' =
+			
+			YEAR(MAX('Fact Sale'[Invoice Date Key]))
+		formatString: #,0
+		lineageTag: a2ff06f6-838d-4159-b5fe-a63d6c69cac4
+
+	measure 'Net Profit %' =
+			
+			DIVIDE(
+			    [Profit]
+			    ,[Gross Profit Including Taxes]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0b642a34-ba89-4c36-93d7-885a46abec53
+
+	measure Profit =
+			
+			SUM( 'Fact Sale'[Profit] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: 92e61da5-c9f2-49af-8683-456384b7b3aa
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Gross Profit Including Taxes' =
+			
+			SUM('Fact Sale'[Total Including Tax])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 9ce0da59-fc00-49a4-a2a4-a7fbc552ba41
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'MIN Year' =
+			
+			YEAR(MIN('Fact Sale'[Invoice Date Key]))
+		formatString: #,0
+		lineageTag: 20825dba-e5db-42ff-adf1-56a148ba4652
+
+	measure 'Count Customer' =
+			
+			COUNT('Fact Sale'[Customer Key])
+		formatString: #,0
+		lineageTag: 3e5be691-7882-4dab-991f-40ad61810ee4
+
+	measure 'Sales Conversion %' =
+			
+			DIVIDE(
+			    [Count Customer],
+			    [Access]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Sales Conversion
+		lineageTag: a9189c10-55e5-4a32-918b-67b4cba600db
+
+	measure 'Sales Conversion % LY' =
+			
+			CALCULATE(
+			    [Sales Conversion %]
+			    ,SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Sales Conversion
+		lineageTag: 6a15d108-1c04-4429-997e-59e35d3ac6ae
+
+	measure 'Count Customer LY' =
+			
+			CALCULATE(
+			    [Count Customer]
+			    ,SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		formatString: #,0
+		lineageTag: e87649cc-565f-4752-b27b-f0c3fa0d2d4b
+
+	measure 'Count Sales LY' =
+			
+			CALCULATE(
+			    [Count Sales]
+			    ,SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		formatString: #,0
+		lineageTag: 69b14fca-4bfb-439c-b32f-9ca7a89da4d8
+
+	measure 'Net Profit % LY' =
+			
+			CALCULATE(
+			    [Net Profit %]
+			    ,SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: d35300bf-41b7-4e44-8c4a-a42964eab04f
+
+	measure Access =
+			
+			SUM('Fact Sale'[Access])
+		formatString: #,0
+		lineageTag: 7f765512-7582-4e7a-9f3f-625f57514b82
+
+	measure 'Profit LY' =
+			
+			CALCULATE(
+			    [Profit]
+			    ,SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: bad29255-9d99-4031-bf54-f067f68a4392
+
+	measure 'Profit vs LY' =
+			
+			VAR __ProfitLY = [Profit LY]
+			RETURN
+			DIVIDE(
+			    [Profit] - __ProfitLY,
+			    __ProfitLY
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Profit
+		lineageTag: 61bdbd0a-ca59-4a70-842e-ef8a9eb31335
+
+	measure 'Filter until Max Sales Date' =
+			
+			VAR __SalesNotEmpty = NOT ISEMPTY( 'Fact Sale' )
+			RETURN
+			IF(
+			    __SalesNotEmpty
+			    ,1
+			    ,0
+			)
+		formatString: 0
+		displayFolder: Other
+		lineageTag: 22cf259c-afa2-4ad4-a809-ec395414d307
+
+	measure Arrow =
+			
+			VAR __vsProfitIsPositive = [Profit vs LY] > 0
+			RETURN
+			IF(
+			    __vsProfitIsPositive
+			    ,"↑"
+			    ,"↓"
+			)
+		displayFolder: Other
+		lineageTag: 297c8a48-364d-4b65-95a0-370fb1a1226e
+
+	measure 'Title Current Profit' =
+			
+			VAR __Month = SELECTEDVALUE('Dimension Date'[Short Month])
+			VAR __Quarter = SELECTEDVALUE('Dimension Date'[Quarter])
+			VAR __Year = SELECTEDVALUE('Dimension Date'[Year])
+			RETURN
+			"PROFIT"
+			& IF( ISBLANK(__Month), "", " " & UPPER(__Month) )
+			& IF( ISBLANK(__Month) && NOT ISBLANK(__Quarter), " Q" & __Quarter, "" )
+			& " " & __Year
+		displayFolder: Other
+		lineageTag: 3edfa60d-01c6-4cc6-b68a-d48df8687533
+
+	measure 'Title Current Sales Conversion' =
+			
+			VAR __Month = SELECTEDVALUE('Dimension Date'[Short Month])
+			VAR __Quarter = SELECTEDVALUE('Dimension Date'[Quarter])
+			RETURN
+			"CONVERSION"
+			& IF( ISBLANK(__Month), "", " " & UPPER(__Month) )
+			& IF( ISBLANK(__Month) && NOT ISBLANK(__Quarter), " Q" & __Quarter, "" )
+		displayFolder: Other
+		lineageTag: affdde66-d2f0-4346-89db-5107357d8156
+
+	measure 'Title Historic Profit' = ```
+			
+			VAR __MaxYear = MAX('Dimension Date'[Year])
+			VAR __MinYear = MIN('Dimension Date'[Year])
+			RETURN
+			"PROFIT"
+			& IF( 
+			    __MaxYear = __MinYear
+			    , " " & __MaxYear
+			    , " " & __MinYear & " TO " & __MaxYear
+			)
+			```
+		displayFolder: Other
+		lineageTag: 66f9be6a-39fc-4b1d-ae10-b990dbaadd51
+
+	measure 'Sales Conversion % vs LY %' =
+			
+			( [Sales Conversion %] - [Sales Conversion % LY]) * 100
+		formatString: 0.000
+		displayFolder: Sales Conversion
+		lineageTag: 2534afc6-4513-4315-9975-99ad113e17f4
+
+	measure 'Title Historic Sales Conversion' = ```
+			
+			VAR __MaxYear = MAX('Dimension Date'[Year])
+			VAR __MinYear = MIN('Dimension Date'[Year])
+			RETURN
+			"CONVERSION"
+			& IF( 
+			    __MaxYear = __MinYear
+			    , " " & __MaxYear
+			    , " " & __MinYear & " TO " & __MaxYear
+			)
+			```
+		displayFolder: Other
+		lineageTag: b7ceaa99-1e2c-41c5-8c9d-6ce5a269eafd
+
+	measure Stock = ```
+			
+			AVERAGEX( 
+			    'Fact Warehouse',
+			    ('Fact Warehouse'[Quantity On Hand] + 'Fact Warehouse'[Last Stocktake Quantity] ) / 2
+			)
+			```
+		formatString: #,0
+		lineageTag: d31a80e6-04c8-450d-ba60-e8cc868933e7
+
+	measure 'Stock Turnover' =
+			
+			DIVIDE(
+			    [Quantity],
+			    [Stock]
+			)
+		lineageTag: f1bcb2ed-0100-448f-ad66-fdc63f8eb93b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Title Current Stock Turnover' =
+			
+			VAR __Month = SELECTEDVALUE('Dimension Date'[Short Month])
+			VAR __Quarter = SELECTEDVALUE('Dimension Date'[Quarter])
+			VAR __Year = SELECTEDVALUE('Dimension Date'[Year])
+			RETURN
+			"STOCK TURNOVER"
+			& IF( ISBLANK(__Month), "", " " & UPPER(__Month) )
+			& IF( ISBLANK(__Month) && NOT ISBLANK(__Quarter), " Q" & __Quarter, "" )
+			& " " & __Year
+		displayFolder: Other
+		lineageTag: 60d10c3e-4ed4-4eb9-a1dc-0054a045dc5a
+
+	measure Costs =
+			
+			SUM('Fact Sale'[Total Excluding Tax]) - [Profit]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 6b12bcb0-15b3-4c7d-a97f-88dd0fa35718
+
+	measure Taxes =
+			
+			SUM('Fact Sale'[Total Including Tax]) - [Costs] - [Profit]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 0173d201-5bee-4506-a3b0-29a3351c4dd6
+
+	measure 'Taxes %' =
+			
+			DIVIDE(
+			    [Taxes],
+			    [Gross Profit Including Taxes]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e408fb48-3e63-4f67-ab34-972db805e8ab
+
+	measure 'Average profit per item' =
+			
+			DIVIDE(
+			    [Profit],
+			    [Quantity]
+			)
+		displayFolder: Profit
+		lineageTag: 2a2f79ac-3dc6-4ec1-89bb-801612e70b32
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average sales by city' =
+			
+			DIVIDE(
+			    [Count Sales],
+			    DISTINCTCOUNT('Dimension City'[City])
+			)
+		lineageTag: 1943a3e6-4829-4c45-9c0e-b6f6c73f9167
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Profit CW' =
+			
+			CALCULATE(
+			    [Profit],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key]),
+			        -7,
+			        DAY
+			    )
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: ef7c9d83-a44a-4add-9ea1-7c4c99cbd093
+
+	measure 'Profit LW' =
+			
+			CALCULATE(
+			    [Profit],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key])-7,
+			        -7,
+			        DAY
+			    )
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: 8c6c576d-f14f-4bfc-a21e-ec09e54819d9
+
+	measure 'Profit CW LY' =
+			
+			CALCULATE(
+			    [Profit CW],
+			    SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: bb64f8ad-e82b-43af-b362-74def040c0ed
+
+	measure 'Profit CW Target' =
+			
+			[Profit CW LY] * 1.047
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: 9b79b0f4-7d64-4c0d-9e47-7f4e76681d00
+
+	measure 'Profit LW LY' =
+			
+			CALCULATE(
+			    [Profit LW],
+			    SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: dddbd593-24ab-415e-abd1-d2c24505e9d3
+
+	measure 'Profit LW Target' =
+			
+			[Profit LW LY] * 1.0357
+		formatString: #,0.00
+		displayFolder: Profit
+		lineageTag: 06d3b652-bb8f-4b47-8572-482a66285d3c
+
+	measure 'Profit CM' =
+			
+			CALCULATE(
+			    [Profit],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key]),
+			        -1,
+			        MONTH
+			    )
+			)
+		displayFolder: Profit
+		lineageTag: 2e800515-48ec-49f6-a865-4596d81de480
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Profit LM' =
+			
+			CALCULATE(
+			    [Profit],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key]),
+			        -1,
+			        MONTH
+			    )
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: 9ad9f981-43b1-4549-91c6-2b21261883b8
+
+	measure 'Profit L3M' =
+			
+			CALCULATE(
+			    [Profit],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key]),
+			        -3,
+			        MONTH
+			    )
+			)
+		displayFolder: Profit
+		lineageTag: a0467dc4-b99f-4d05-9cf4-3e7516ed4880
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Profit LM LY' =
+			
+			CALCULATE(
+			    [Profit LM],
+			    SAMEPERIODLASTYEAR( 'Dimension Date'[Date] )
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: aceb6daa-9c60-4ca7-97e2-1b13eb196e35
+
+	measure 'Profit LM Target' =
+			
+			[Profit LM LY] * 1.047
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: 228c91d8-3509-42e9-ac15-1e8dd8b34b3c
+
+	measure 'Profit L3M Target' =
+			
+			[Profit L3M LY] * 1.047
+		displayFolder: Profit
+		lineageTag: ed976897-fa16-4857-9c6e-508fb1e4b2d8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Profit L3M LY' =
+			
+			CALCULATE(
+			    [Profit],
+			    SAMEPERIODLASTYEAR( 'Dimension Date'[Date] )
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: 06ab6902-93aa-4ca8-9cb0-de26a3351cb7
+
+	measure 'Profit CW vs Target' =
+			
+			VAR __Target = [Profit CW Target]
+			RETURN
+			DIVIDE( [Profit CW] - __Target, __Target )
+		formatString: #,0.00%;-#,0.00%;#,0.00%
+		displayFolder: Profit
+		lineageTag: 718a5128-0f79-45df-8ff4-61ba850068a2
+
+	measure 'Profit LM vs Target' =
+			
+			VAR __Target = [Profit LM Target]
+			RETURN
+			DIVIDE( [Profit LM] - __Target, __Target )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Profit
+		lineageTag: 2a3fa1e0-c9cf-44ba-bd29-03ea67a85ec2
+
+	measure 'Profit L3M vs Target' =
+			
+			VAR __Target = [Profit L3M Target]
+			RETURN
+			DIVIDE( [Profit L3M] - __Target, __Target )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Profit
+		lineageTag: 87cd22cf-86d1-4e1e-8892-d9193eb3336c
+
+	measure 'Pareto %' =
+			
+			SWITCH(
+			    SELECTEDVALUE( 'Field Parameter'[Field Parameter Fields] )
+			    ,NAMEOF( 'Dimension City'[Sales Territory] )
+					,VAR __AllField = ALL( 'Dimension City'[Sales Territory] )
+					VAR __Table = ADDCOLUMNS( __AllField , "@PCW" , [Profit CW] )
+					VAR __CurrentProfit = [Profit CW]
+					VAR __CumTable = FILTER( __Table , [@PCW] >= __CurrentProfit )
+					VAR __CumulativeSumTable = SUMX( __CumTable , [@PCW] )
+					VAR __AllFieldProfit = CALCULATE( [Profit CW] , __AllField)
+					VAR __Result = DIVIDE( __CumulativeSumTable , __AllFieldProfit )
+					RETURN
+						__Result
+			
+			    ,NAMEOF( 'Dimension City'[State Province] )
+					,VAR __AllField = ALL( 'Dimension City'[State Province] )
+					VAR __Table = ADDCOLUMNS( __AllField , "@PCW" , [Profit CW] )
+					VAR __CurrentProfit = [Profit CW]
+					VAR __CumTable = FILTER( __Table , [@PCW] >= __CurrentProfit )
+					VAR __CumulativeSumTable = SUMX( __CumTable , [@PCW] )
+					VAR __AllFieldProfit = CALCULATE( [Profit CW] , __AllField)
+					VAR __Result = DIVIDE( __CumulativeSumTable , __AllFieldProfit )
+					RETURN
+						__Result
+			)
+		formatString: 0%;-0%;0%
+		lineageTag: 88b6bcc9-edbe-41c9-bf5b-b642822abe1a
+
+	measure 'Pareto Color' =
+			
+			IF( [Pareto %] <= [Pareto Threshold Value] , "#229dce" , "#666666")
+		lineageTag: f7f24235-253a-4353-9ce6-a5d289e2a481
+
+	measure 'How many' = ```
+			
+			SWITCH(
+			    SELECTEDVALUE( 'Field Parameter'[Field Parameter Fields] )
+			    ,NAMEOF( 'Dimension City'[Sales Territory] )
+					,VAR __AllField = FILTER( DISTINCT( 'Dimension City'[Sales Territory] ), 'Dimension City'[Sales Territory] <> "N/A")
+					VAR __Table = ADDCOLUMNS( __AllField , "@PCW" , [Profit CW] )
+					VAR __ProfitAllTerritory = CALCULATE( [Profit CW] , __AllField)
+					VAR __Pareto = 
+						FILTER(
+							ADDCOLUMNS( 
+								__AllField , 
+								"@PCW" , 
+									VAR __CurrentProfit = [Profit CW] RETURN
+									DIVIDE( 
+										SUMX( FILTER( __Table , [@PCW] >= __CurrentProfit ), [@PCW]  ),
+										__ProfitAllTerritory
+									)
+							)
+							,[@PCW] <= [Pareto Threshold Value]
+						)
+					RETURN
+						DIVIDE( COUNTROWS(__Pareto), COUNTROWS(__AllField) )
+			
+			    ,NAMEOF( 'Dimension City'[State Province] )
+					,VAR __AllField = FILTER( DISTINCT( 'Dimension City'[State Province] ), 'Dimension City'[State Province] <> "N/A")
+					VAR __Table = ADDCOLUMNS( __AllField , "@PCW" , [Profit CW] )
+					VAR __ProfitAllTerritory = CALCULATE( [Profit CW] , __AllField)
+					VAR __Pareto = 
+						FILTER(
+							ADDCOLUMNS( 
+								__AllField , 
+								"@PCW" , 
+									VAR __CurrentProfit = [Profit CW] RETURN
+									DIVIDE( 
+										SUMX( FILTER( __Table , [@PCW] >= __CurrentProfit ), [@PCW]  ),
+										__ProfitAllTerritory
+									)
+							)
+							,[@PCW] <= [Pareto Threshold Value]
+						)
+					RETURN
+						DIVIDE( COUNTROWS(__Pareto), COUNTROWS(__AllField) )
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Other
+		lineageTag: 2d280475-ccd1-4c00-9f53-715a8264f893
+
+	measure 'Conversion CW' =
+			
+			CALCULATE(
+			    [Sales Conversion %],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key]),
+			        -7,
+			        DAY
+			    )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: d3504afa-5142-41db-88a0-eb1fce7d6ab0
+
+	measure 'Conversion CW LY' =
+			
+			CALCULATE(
+			    [Conversion CW],
+			    SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			)
+		lineageTag: 61279022-a7e6-40e1-b8ee-8e97120e7b51
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Conversion CW Target' =
+			
+			[Conversion CW LY] * 1.047
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: a9c03de1-79c4-4545-a392-d809710224d1
+
+	measure 'Conversion CW vs Target' =
+			
+			VAR __Target = [Conversion CW Target]
+			RETURN
+			DIVIDE( [Conversion CW] - __Target, __Target )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3dcd3abb-4901-4022-bffe-b6e0fcf67bc1
+
+	measure 'Profit CW Total' =
+			
+			CALCULATE(
+			    [Profit CW],
+			    REMOVEFILTERS('Dimension City'[Sales Territory]),
+			    REMOVEFILTERS('Dimension City'[State Province])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: c0adf0ac-6473-4b86-a96a-4b19475515a8
+
+	measure 'Customer CW' =
+			
+			CALCULATE(
+			    [Count Customer],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key]),
+			        -7,
+			        DAY
+			    )
+			)
+		formatString: #,0
+		lineageTag: 8bf9d8db-cf55-4b9e-acc4-b1c23a43781f
+
+	measure 'Access CW' =
+			
+			CALCULATE(
+			    [Access],
+			    DATESINPERIOD(
+			        'Dimension Date'[Date],
+			        MAX('Fact Sale'[Invoice Date Key]),
+			        -7,
+			        DAY
+			    )
+			)
+		formatString: #,0
+		lineageTag: e026b5a8-f13a-4bc2-896c-11e5ff78c1ec
+
+	measure 'Profit Target Employee' = ```
+			
+			VAR __Target = 
+			    CALCULATE(
+			        [Profit]
+			        ,SAMEPERIODLASTYEAR('Dimension Date'[Date])
+			    )
+			VAR __Factor = INT( RIGHT(SELECTEDVALUE('Dimension Employee'[Employee Key]), 1) )
+			VAR __Multiplier = 1 + (IF( __Factor = 0, 1, __Factor) / 100)
+			RETURN
+			IF(
+			    ISBLANK(__Target)
+			    ,[Profit] * 0.97
+			    ,__Target * __Multiplier
+			)
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Profit
+		lineageTag: 4a55c50e-5298-4997-bb27-b6a77f7eee11
+
+	measure Blank = BLANK()
+		formatString: 0
+		displayFolder: Other
+		lineageTag: e6061c41-d699-4f29-96be-f101635f911b
+
+	measure 'Profit vs Target' =
+			
+			[Profit] / [Profit Target Employee]
+		displayFolder: Profit
+		lineageTag: a2a1a379-50c3-436e-9e61-dd5875917255
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Dummy
+		dataType: string
+		isHidden
+		lineageTag: b9c0ced0-4586-4686-a12a-13233b514fca
+		summarizeBy: none
+		sourceColumn: Dummy
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source = ```
+				let
+				    Source = #table(
+				        type table [Dummy = text], 
+				        {
+				            {""}
+				        }
+				    )
+				in
+				    Source
+				```
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,54 @@
+table 'Field Parameter'
+	lineageTag: 5e8a4cb7-35d3-4e64-8417-7f24b327a1e0
+
+	column Categories
+		dataType: string
+		lineageTag: dd2d5c1c-935d-4bde-ab67-06ec8c98d587
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: [Value1]
+		sortByColumn: 'Field Parameter Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Field Parameter Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Field Parameter Fields'
+		dataType: string
+		isHidden
+		lineageTag: 2896c68b-7349-4a26-9812-afd61341f462
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: [Value2]
+		sortByColumn: 'Field Parameter Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Field Parameter Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ff1f72da-56d6-4ec2-92f7-f721cc6afe22
+		summarizeBy: sum
+		isDataTypeInferred
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Field Parameter' = calculated
+		mode: import
+		source =
+				{
+				    ("Territory", NAMEOF('Dimension City'[Sales Territory]), 0),
+				    ("State", NAMEOF('Dimension City'[State Province]), 1)
+				}
+
+	annotation PBI_Id = e3bbef2b684842069a4cc8fa145ed33f
+

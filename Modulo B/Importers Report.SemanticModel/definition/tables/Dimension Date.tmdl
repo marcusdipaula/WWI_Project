@@ -1,0 +1,165 @@
+table 'Dimension Date'
+	lineageTag: 72db44bf-3eab-49a4-b0a6-5096f96e9a03
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: 1a681604-1622-4426-ba79-0216ab4ba467
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Day Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 52b51f56-744a-4a8c-bd29-efc3821c5b07
+		summarizeBy: sum
+		sourceColumn: Day Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		dataType: string
+		lineageTag: 109946fe-fdfc-473f-9bc2-c2048c61891a
+		summarizeBy: none
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 640a06d3-20c4-4216-89e5-b9aab700c8ca
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Calendar Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Month'
+		dataType: string
+		lineageTag: b28698a9-5f20-450a-b6ce-e5cf1f9f24eb
+		summarizeBy: none
+		sourceColumn: Short Month
+		sortByColumn: 'Calendar Month Number'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Calendar Month Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 35648037-95f4-44fd-a4d0-55af32ddfc9f
+		summarizeBy: sum
+		sourceColumn: Calendar Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Calendar Month Label'
+		dataType: string
+		lineageTag: 99979493-d308-4403-8959-7d918e31144f
+		summarizeBy: none
+		sourceColumn: Calendar Month Label
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Calendar Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: ae64cd27-521b-4689-a1bc-ceaffaf7f130
+		summarizeBy: sum
+		sourceColumn: Calendar Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Calendar Year Label'
+		dataType: string
+		lineageTag: fa49ed25-47b6-4937-aa09-ea7c6c14950b
+		summarizeBy: none
+		sourceColumn: Calendar Year Label
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Month Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: af58c3d4-0cdb-4f65-9f31-bfb912d6d249
+		summarizeBy: sum
+		sourceColumn: Fiscal Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Month Label'
+		dataType: string
+		lineageTag: 28f39b83-4f89-4a8b-95d8-ed8e616450bd
+		summarizeBy: none
+		sourceColumn: Fiscal Month Label
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 27fdfbd7-7643-4b4b-90c5-cbe7f3892e46
+		summarizeBy: sum
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Year Label'
+		dataType: string
+		lineageTag: 2e69d7dc-36d0-46f5-9030-c2a9d58e6b17
+		summarizeBy: none
+		sourceColumn: Fiscal Year Label
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ISO Week Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a29a3ab-c5ca-4739-9322-1c74afccfd23
+		summarizeBy: sum
+		sourceColumn: ISO Week Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 8b233adf-fac7-4dcd-938a-e454f06156e7
+		summarizeBy: sum
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 899994ab-17fa-4323-be29-8e7512f78497
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Dimension Date' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("."),
+				    WideWorldImportersDW = Source{[Name="WideWorldImportersDW"]}[Data],
+				    Dimension_Date = WideWorldImportersDW{[Schema="Dimension",Item="Date"]}[Data],
+				    #"Removed Columns" = Table.RemoveColumns(Dimension_Date,{"Fact.Movement", "Fact.Order(Date)", "Fact.Order(Date) 2", "Fact.Purchase", "Fact.Sale(Date)", "Fact.Sale(Date) 2", "Fact.Transaction"}),
+				    #"Inserted Quarter" = Table.AddColumn(#"Removed Columns", "Quarter", each Date.QuarterOfYear([Date]), Int64.Type),
+				    #"Inserted Year" = Table.AddColumn(#"Inserted Quarter", "Year", each Date.Year([Date]), Int64.Type)
+				in
+				    #"Inserted Year"
+
+	annotation PBI_ResultType = Table
+

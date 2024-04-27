@@ -1,0 +1,215 @@
+table 'Fact Sale'
+	lineageTag: 99b969a9-fb3f-4ea6-aa12-d9f68991674c
+
+	refreshPolicy
+		policyType: basic
+		rollingWindowGranularity: year
+		rollingWindowPeriods: 11
+		incrementalGranularity: day
+		incrementalPeriods: 106
+		incrementalPeriodsOffset: -1
+		sourceExpression =
+			let
+			    Source = Sql.Databases("."),
+			    WideWorldImportersDW = Source{[Name="WideWorldImportersDW"]}[Data],
+			    Fact_Sale = WideWorldImportersDW{[Schema="Fact",Item="SalesAdjusted"]}[Data],
+			    #"Filtered Rows" = Table.SelectRows(Fact_Sale, each [Invoice Date Key] >= RangeStart and [Invoice Date Key] < RangeEnd)
+			in
+			    #"Filtered Rows"
+
+	column 'Sale Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 9293e0e3-6e3c-4616-98ad-4d4c0a91a39f
+		summarizeBy: count
+		sourceColumn: Sale Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'City Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d7cb091-980f-4b65-a0a7-1336bd490836
+		summarizeBy: none
+		sourceColumn: City Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 136c9a5b-bc65-4561-bf9e-861fa7f75f03
+		summarizeBy: none
+		sourceColumn: Customer Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Stock Item Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5bb9dfcd-3adc-41e8-a717-7ccd0a9de3f0
+		summarizeBy: none
+		sourceColumn: Stock Item Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Invoice Date Key'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b5031732-19c9-4cc1-8538-15c1046baf61
+		summarizeBy: none
+		sourceColumn: Invoice Date Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Delivery Date Key'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5b5c1096-c7cc-447d-ba07-d6a347ebb228
+		summarizeBy: none
+		sourceColumn: Delivery Date Key
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Salesperson Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: e496b7ff-0787-49b1-89ac-41b01baf2f65
+		summarizeBy: none
+		sourceColumn: Salesperson Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'WWI Invoice ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 48ab6955-6693-43a9-b446-4837d6cfbe70
+		summarizeBy: none
+		sourceColumn: WWI Invoice ID
+
+		annotation SummarizationSetBy = User
+
+	column Quantity
+		dataType: int64
+		formatString: #,0
+		lineageTag: 3748f9c4-70fe-4f40-a5ab-2706f1ec11d9
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unit Price'
+		dataType: double
+		lineageTag: f87d79dd-6c32-461a-8d27-82363c8a669d
+		summarizeBy: sum
+		sourceColumn: Unit Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Tax Rate'
+		dataType: double
+		lineageTag: c32bff93-fa13-4769-98ca-57235c28ea4d
+		summarizeBy: sum
+		sourceColumn: Tax Rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Excluding Tax'
+		dataType: double
+		lineageTag: 29ee7693-e594-42d9-814c-3408c1b2db0e
+		summarizeBy: sum
+		sourceColumn: Total Excluding Tax
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Tax Amount'
+		dataType: double
+		lineageTag: 682be6f3-ffb1-49f0-bdce-18618ec13dd8
+		summarizeBy: sum
+		sourceColumn: Tax Amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Profit
+		dataType: double
+		lineageTag: 2f021872-253f-41fa-8532-e1bfe14995ec
+		summarizeBy: sum
+		sourceColumn: Profit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Including Tax'
+		dataType: double
+		lineageTag: 835f2eda-0eaa-4a02-985e-0d3d068127be
+		summarizeBy: sum
+		sourceColumn: Total Including Tax
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Dry Items'
+		dataType: int64
+		formatString: 0
+		lineageTag: a6c115af-cd01-42ad-ad99-d2816e2b0c6f
+		summarizeBy: sum
+		sourceColumn: Total Dry Items
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Chiller Items'
+		dataType: int64
+		formatString: 0
+		lineageTag: 66ee78ac-37f4-4c4e-a37d-0991758d3bd2
+		summarizeBy: sum
+		sourceColumn: Total Chiller Items
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Bill To Customer Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 49957750-9f35-4185-b35f-f1f07a41c82d
+		summarizeBy: count
+		sourceColumn: Bill To Customer Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Access
+		dataType: int64
+		formatString: 0
+		lineageTag: 5057e65e-7572-48ae-91e7-069ca5f02bd2
+		summarizeBy: sum
+		sourceColumn: Access
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Fact Sale' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("."),
+				    WideWorldImportersDW = Source{[Name="WideWorldImportersDW"]}[Data],
+				    Fact_Sale = WideWorldImportersDW{[Schema="Fact",Item="SalesAdjusted"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(Fact_Sale, each [Invoice Date Key] >= RangeStart and [Invoice Date Key] < RangeEnd)
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_IsMQueryFoldable = True
+
+	annotation PBI_NavigationStepName = Navigation
+

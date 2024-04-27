@@ -1,0 +1,189 @@
+table 'Dimension City'
+	lineageTag: efbce681-8823-4a30-9c7c-cc6c93dbed6d
+
+	column 'City Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a4f4530-0305-4d84-8a44-c1645fe9db90
+		summarizeBy: none
+		sourceColumn: City Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'WWI City ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 6cc79947-cbdc-45e3-9e11-46efe3cacfa2
+		summarizeBy: none
+		sourceColumn: WWI City ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: badce385-48ee-4013-8a71-9e45e68842de
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'State Province'
+		dataType: string
+		lineageTag: bb401e57-988a-4121-b229-1a80c01dbe9f
+		summarizeBy: none
+		sourceColumn: State Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 7e6c43bb-738d-43d2-9874-71bf1681f152
+		dataCategory: County
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Continent
+		dataType: string
+		lineageTag: f48f3318-297b-460f-8b72-15690e56854c
+		dataCategory: Continent
+		summarizeBy: none
+		sourceColumn: Continent
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Sales Territory'
+		dataType: string
+		lineageTag: 11db28bc-47fc-4cd8-8406-d5704cd59164
+		summarizeBy: none
+		sourceColumn: Sales Territory
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 03d9fa73-d353-49b4-90ca-588f787a39e1
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subregion
+		dataType: string
+		lineageTag: 02370afe-2541-4f52-92c8-27b7593e10a3
+		summarizeBy: none
+		sourceColumn: Subregion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Latest Recorded Population'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5d96a933-6193-46ad-88ec-dd200c55058f
+		summarizeBy: none
+		sourceColumn: Latest Recorded Population
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valid From'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b2aeb8ef-c98c-48a7-bfc6-d7bbb7f449cb
+		summarizeBy: none
+		sourceColumn: Valid From
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Valid To'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fb360273-fc7f-40d4-b45f-02fe07f8d966
+		summarizeBy: none
+		sourceColumn: Valid To
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Lineage Key'
+		dataType: int64
+		formatString: 0
+		lineageTag: fc37099b-ca34-427c-beb4-3d1674e49970
+		summarizeBy: none
+		sourceColumn: Lineage Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		lineageTag: 6fa4d8a2-afc0-492c-82e7-b2dc72c73d90
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitude
+		dataType: double
+		lineageTag: 44f23f71-2879-4951-ac0f-32e35a5457cf
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Dimension City' = m
+		mode: import
+		source = ```
+				let
+				    Source = Sql.Database(".", "WideWorldImportersDW", [Query="
+				        select [_].[City Key] as [City Key],
+				            [_].[WWI City ID] as [WWI City ID],
+				            [_].[City] as [City],
+				            [_].[State Province] as [State Province],
+				            [_].[Country] as [Country],
+				            [_].[Continent] as [Continent],
+				            [_].[Sales Territory] as [Sales Territory],
+				            [_].[Region] as [Region],
+				            [_].[Subregion] as [Subregion],
+				            [_].[Latitude] as [Latitude],
+				            [_].[Longitude] as [Longitude],
+				            [_].[Latest Recorded Population] as [Latest Recorded Population],
+				            convert(date, [_].[Valid From]) as [Valid From],
+				            convert(date, [_].[Valid To]) as [Valid To],
+				            [_].[Lineage Key] as [Lineage Key]
+				        from 
+				        (
+				            select [$Table].[City Key] as [City Key],
+				                [$Table].[WWI City ID] as [WWI City ID],
+				                [$Table].[City] as [City],
+				                [$Table].[State Province] as [State Province],
+				                [$Table].[Country] as [Country],
+				                [$Table].[Continent] as [Continent],
+				                [$Table].[Sales Territory] as [Sales Territory],
+				                [$Table].[Region] as [Region],
+				                [$Table].[Subregion] as [Subregion],
+				                [$Table].[Location].Lat as [Latitude],
+				                [$Table].[Location].Long as [Longitude],
+				                [$Table].[Latest Recorded Population] as [Latest Recorded Population],
+				                [$Table].[Valid From] as [Valid From],
+				                [$Table].[Valid To] as [Valid To],
+				                [$Table].[Lineage Key] as [Lineage Key]
+				            from [Dimension].[City] as [$Table]
+				        ) as [_]
+				    "]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Valid From", type date}, {"Valid To", type date}})
+				in
+				    #"Changed Type"
+				```
+
+	annotation PBI_ResultType = Table
+

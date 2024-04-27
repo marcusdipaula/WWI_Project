@@ -1,0 +1,26 @@
+DEFINE
+	VAR __DS0FilterTable = 
+		FILTER(
+			KEEPFILTERS(VALUES('Pareto Threshold'[Pareto Threshold])),
+			'Pareto Threshold'[Pareto Threshold] = 0.7000000000000004
+		)
+
+	VAR __DS0FilterTable2 = 
+		TREATAS({"'Dimension City'[Sales Territory]"}, 'Field Parameter'[Field Parameter Fields])
+
+	VAR __DS0FilterTable3 = 
+		TREATAS({"Top"}, 'Top Bottom selector'[Selector])
+
+	VAR __DS0FilterTable4 = 
+		TREATAS({2024}, 'Dimension Date'[Calendar Year])
+
+EVALUATE
+	SUMMARIZECOLUMNS(
+		__DS0FilterTable,
+		__DS0FilterTable2,
+		__DS0FilterTable3,
+		__DS0FilterTable4,
+		"Profit_CW_vs_Target", IGNORE('_Measures'[Profit CW vs Target]),
+		"Conversion_CW", IGNORE('_Measures'[Conversion CW]),
+		"Conversion_CW_Target", IGNORE('_Measures'[Conversion CW Target])
+	)
