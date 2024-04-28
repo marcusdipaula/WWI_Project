@@ -3,9 +3,9 @@ End to End BI Solution as a final task for the Analytics &amp; BI Specialization
 
 This project is composed of 3 main modules
 
-1. Module A - Discovery and Project Solution
-2. Module B - Dashboard
-3. Module C - ML and Analytics
+1. [Module A - Discovery and Project Solution](https://github.com/marcusdipaula/WWI_Project?tab=readme-ov-file#module-a)
+2. [Module B - Dashboard](https://github.com/marcusdipaula/WWI_Project?tab=readme-ov-file#module-b)
+3. [Module C - ML and Analytics](https://github.com/marcusdipaula/WWI_Project?tab=readme-ov-file#module-c)
 
 The data used for this project comes from the fictitious company *[Wide World Importers](https://learn.microsoft.com/en-us/sql/samples/wide-world-importers-what-is?view=sql-server-ver16)*, by Microsoft.
 
